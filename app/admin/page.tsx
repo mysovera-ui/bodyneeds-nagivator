@@ -1,14 +1,6 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { ENTITIES } from "@/lib/admin";
-
-async function logout() {
-  "use server";
-  const cookieStore = await cookies();
-  cookieStore.delete("admin_session");
-  redirect("/admin/login");
-}
+import { logout } from "@/lib/admin-actions";
 
 export default function AdminHome() {
   return (
