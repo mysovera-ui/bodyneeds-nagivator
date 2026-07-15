@@ -13,11 +13,14 @@ export default function SearchBox({
         defaultValue={defaultValue}
         placeholder={placeholder}
         autoFocus
-        className="flex-1 rounded-lg border border-neutral-300 px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        autoComplete="off"
+        autoCapitalize="none"
+        inputMode="search"
+        className="flex-1 min-w-0 rounded-lg border border-neutral-300 px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500"
       />
       <button
         type="submit"
-        className="rounded-lg bg-emerald-700 text-white px-5 py-3 font-medium hover:bg-emerald-800 transition-colors"
+        className="shrink-0 touch-manipulation rounded-lg bg-emerald-700 text-white px-5 py-3 font-medium hover:bg-emerald-800 active:bg-emerald-900 transition-colors"
       >
         Search
       </button>

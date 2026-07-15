@@ -23,7 +23,7 @@ export default async function FoodsIndex({
           <select
             name="category"
             defaultValue={category ?? ""}
-            className="rounded-lg border border-neutral-300 px-3 py-2"
+            className="rounded-lg border border-neutral-300 px-3 py-2.5 text-base"
           >
             <option value="">All</option>
             {CATEGORIES.map((c) => (
@@ -40,17 +40,17 @@ export default async function FoodsIndex({
             name="excludeAllergen"
             defaultValue={excludeAllergen ?? ""}
             placeholder="e.g. fish"
-            className="rounded-lg border border-neutral-300 px-3 py-2"
+            className="rounded-lg border border-neutral-300 px-3 py-2.5 text-base"
           />
         </div>
         <button
           type="submit"
-          className="rounded-lg bg-emerald-700 text-white px-4 py-2 font-medium hover:bg-emerald-800"
+          className="rounded-lg bg-emerald-700 text-white px-4 py-2.5 font-medium hover:bg-emerald-800 active:bg-emerald-900 touch-manipulation"
         >
           Apply
         </button>
         {(category || excludeAllergen) && (
-          <Link href="/foods" className="text-neutral-500 underline px-2 py-2">
+          <Link href="/foods" className="text-neutral-500 underline px-2 py-2.5 touch-manipulation">
             Clear
           </Link>
         )}
@@ -64,7 +64,7 @@ export default async function FoodsIndex({
             <Link
               key={f.id}
               href={`/foods/${f.slug}`}
-              className="rounded-lg border border-neutral-200 bg-white p-4 hover:border-emerald-400 hover:shadow-sm transition-shadow"
+              className="rounded-lg border border-neutral-200 bg-white p-4 hover:border-emerald-400 hover:shadow-sm active:bg-neutral-50 transition-shadow touch-manipulation"
             >
               <div className="flex items-center justify-between">
                 <h2 className="font-semibold text-neutral-900">{f.name}</h2>

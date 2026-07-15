@@ -18,7 +18,7 @@ export default async function SymptomsIndex() {
             <Link
               key={s.id}
               href={`/symptoms/${s.slug}`}
-              className="rounded-lg border border-neutral-200 bg-white p-4 hover:border-emerald-400 hover:shadow-sm transition-shadow"
+              className="rounded-lg border border-neutral-200 bg-white p-4 hover:border-emerald-400 hover:shadow-sm active:bg-neutral-50 transition-shadow touch-manipulation"
             >
               <h2 className="font-semibold text-neutral-900">{s.name}</h2>
               <p className="text-sm text-neutral-500 line-clamp-2 mt-1">

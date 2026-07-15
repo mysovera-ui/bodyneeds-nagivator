@@ -14,7 +14,7 @@ export default async function SymptomDetail({
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-10 space-y-4">
-      <Link href="/symptoms" className="text-sm text-emerald-700 hover:underline">
+      <Link href="/symptoms" className="text-sm text-emerald-700 hover:underline touch-manipulation inline-block py-1">
         ← All symptoms
       </Link>
       <ResultCard symptom={symptom} />
