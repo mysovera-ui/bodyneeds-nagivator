@@ -5,6 +5,8 @@ import ResultCard from "@/components/ResultCard";
 import { ResultCardSkeleton } from "@/components/Skeletons";
 import { assembleFullSymptom, searchSymptoms } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 const EXAMPLES = ["Fatigue", "Poor Sleep", "Low Mood", "Muscle Cramps"];
 
 async function SearchResults({ q }: { q: string }) {
