@@ -2,8 +2,10 @@ import { Suspense } from "react";
 import Link from "next/link";
 import SearchBox from "@/components/SearchBox";
 import ResultCard from "@/components/ResultCard";
+import NutrientResultCard from "@/components/NutrientResultCard";
+import FoodResultCard from "@/components/FoodResultCard";
 import { ResultCardSkeleton } from "@/components/Skeletons";
-import { assembleFullSymptom, searchSymptoms } from "@/lib/data";
+import { searchAll } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -11,9 +13,10 @@ const EXAMPLES = ["Fatigue", "Poor Sleep", "Low Mood", "Muscle Cramps"];
 
 async function SearchResults({ q }: { q: string }) {
   try {
-    const matches = await searchSymptoms(q);
+    const { symptoms, nutrients, foods } = await searchAll(q);
+    const hasResults = symptoms.length > 0 || nutrients.length > 0 || foods.length > 0;
 
-    if (matches.length === 0) {
+    if (!hasResults) {
       return (
         <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-8 text-center">
           <p className="text-neutral-700 font-medium">
@@ -35,12 +38,16 @@ async function SearchResults({ q }: { q: string }) {
       );
     }
 
-    const full = await Promise.all(matches.map((m) => assembleFullSymptom(m)));
-
     return (
       <div className="space-y-6">
-        {full.map((symptom) => (
-          <ResultCard key={symptom.id} symptom={symptom} />
+        {symptoms.map((symptom) => (
+          <ResultCard key={`symptom-${symptom.id}`} symptom={symptom} />
+        ))}
+        {nutrients.map((nutrient) => (
+          <NutrientResultCard key={`nutrient-${nutrient.id}`} nutrient={nutrient} />
+        ))}
+        {foods.map((food) => (
+          <FoodResultCard key={`food-${food.id}`} food={food} />
         ))}
       </div>
     );
@@ -70,8 +77,9 @@ export default async function Home({
           BodyNeeds Navigator
         </h1>
         <p className="text-neutral-600">
-          Search a symptom to see its nutritional context — lifestyle factors,
-          key nutrients, food sources, and supplement safety guidance.
+          Search a symptom, nutrient, or food to see its full nutritional
+          context — lifestyle factors, food sources, and supplement safety
+          guidance.
         </p>
       </div>
 

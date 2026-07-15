@@ -95,6 +95,23 @@ export default function ResultCard({ symptom }: { symptom: FullSymptom }) {
         </div>
       )}
 
+      {symptom.related_symptoms.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-neutral-800 mb-2">Related symptoms</h3>
+          <div className="flex flex-wrap gap-2">
+            {symptom.related_symptoms.map((s) => (
+              <Link
+                key={s.id}
+                href={`/symptoms/${s.slug}`}
+                className="px-3 py-1 rounded-full border border-neutral-300 text-sm text-neutral-700 hover:border-emerald-500 hover:text-emerald-700 touch-manipulation"
+              >
+                {s.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       <Disclaimer />
     </article>
   );

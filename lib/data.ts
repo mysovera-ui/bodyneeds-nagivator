@@ -62,6 +62,7 @@ export type SupplementWithNote = SupplementCategory & {
 export type FullSymptom = Symptom & {
   nutrients: NutrientWithFoods[];
   supplements: SupplementWithNote[];
+  related_symptoms: Symptom[];
 };
 
 // ── Search ──────────────────────────────────────────────────────────────────
@@ -100,6 +101,28 @@ export async function searchFoodSources(q: string): Promise<FoodSource[]> {
     .limit(10);
   if (error) throw new Error(error.message);
   return data ?? [];
+}
+
+export type CombinedSearchResults = {
+  symptoms: FullSymptom[];
+  nutrients: NutrientDetail[];
+  foods: FoodSourceDetail[];
+};
+
+export async function searchAll(q: string): Promise<CombinedSearchResults> {
+  const [symptomRows, nutrientRows, foodRows] = await Promise.all([
+    searchSymptoms(q),
+    searchNutrients(q),
+    searchFoodSources(q),
+  ]);
+
+  const [symptoms, nutrients, foods] = await Promise.all([
+    Promise.all(symptomRows.map((s) => assembleFullSymptom(s))),
+    Promise.all(nutrientRows.map((n) => enrichNutrient(n))),
+    Promise.all(foodRows.map((f) => enrichFoodSource(f))),
+  ]);
+
+  return { symptoms, nutrients, foods };
 }
 
 // ── Full symptom assembly (core result card) ────────────────────────────────
@@ -179,7 +202,44 @@ export async function assembleFullSymptom(
     }[]
   ).map((r) => ({ ...r.supplement_categories, relevance_note: r.relevance_note }));
 
-  return { ...symptom, nutrients, supplements };
+  const supplementIds = supplements.map((s) => s.id);
+  const related_symptoms = await findRelatedSymptoms(symptom.id, nutrientIds, supplementIds);
+
+  return { ...symptom, nutrients, supplements, related_symptoms };
+}
+
+async function findRelatedSymptoms(
+  symptomId: string,
+  nutrientIds: string[],
+  supplementIds: string[],
+): Promise<Symptom[]> {
+  if (nutrientIds.length === 0 && supplementIds.length === 0) return [];
+  const supabase = await createClient();
+  const found = new Map<string, Symptom>();
+
+  if (nutrientIds.length > 0) {
+    const { data } = await supabase
+      .from("symptom_nutrients")
+      .select("symptoms(*)")
+      .in("nutrient_id", nutrientIds)
+      .neq("symptom_id", symptomId);
+    for (const row of (data ?? []) as unknown as { symptoms: Symptom }[]) {
+      found.set(row.symptoms.id, row.symptoms);
+    }
+  }
+
+  if (supplementIds.length > 0) {
+    const { data } = await supabase
+      .from("symptom_supplements")
+      .select("symptoms(*)")
+      .in("supplement_category_id", supplementIds)
+      .neq("symptom_id", symptomId);
+    for (const row of (data ?? []) as unknown as { symptoms: Symptom }[]) {
+      found.set(row.symptoms.id, row.symptoms);
+    }
+  }
+
+  return Array.from(found.values()).slice(0, 4);
 }
 
 // ── Browse indexes ───────────────────────────────────────────────────────────
@@ -236,15 +296,8 @@ export type NutrientDetail = Nutrient & {
   related_symptoms: (Symptom & { relevance_note: string | null })[];
 };
 
-export async function getNutrientBySlug(slug: string): Promise<NutrientDetail | null> {
+export async function enrichNutrient(nutrient: Nutrient): Promise<NutrientDetail> {
   const supabase = await createClient();
-  const { data: nutrient, error } = await supabase
-    .from("nutrients")
-    .select("*")
-    .eq("slug", slug)
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  if (!nutrient) return null;
 
   const { data: nfs, error: nfsErr } = await supabase
     .from("nutrient_food_sources")
@@ -275,19 +328,24 @@ export async function getNutrientBySlug(slug: string): Promise<NutrientDetail | 
   };
 }
 
-export type FoodSourceDetail = FoodSource & {
-  nutrients: (Nutrient & { amount_per_serving: string | null })[];
-};
-
-export async function getFoodSourceBySlug(slug: string): Promise<FoodSourceDetail | null> {
+export async function getNutrientBySlug(slug: string): Promise<NutrientDetail | null> {
   const supabase = await createClient();
-  const { data: food, error } = await supabase
-    .from("food_sources")
+  const { data: nutrient, error } = await supabase
+    .from("nutrients")
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
   if (error) throw new Error(error.message);
-  if (!food) return null;
+  if (!nutrient) return null;
+  return enrichNutrient(nutrient);
+}
+
+export type FoodSourceDetail = FoodSource & {
+  nutrients: (Nutrient & { amount_per_serving: string | null })[];
+};
+
+export async function enrichFoodSource(food: FoodSource): Promise<FoodSourceDetail> {
+  const supabase = await createClient();
 
   const { data: nfs, error: nfsErr } = await supabase
     .from("nutrient_food_sources")
@@ -304,6 +362,18 @@ export async function getFoodSourceBySlug(slug: string): Promise<FoodSourceDetai
       }[]
     ).map((r) => ({ ...r.nutrients, amount_per_serving: r.amount_per_serving })),
   };
+}
+
+export async function getFoodSourceBySlug(slug: string): Promise<FoodSourceDetail | null> {
+  const supabase = await createClient();
+  const { data: food, error } = await supabase
+    .from("food_sources")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!food) return null;
+  return enrichFoodSource(food);
 }
 
 export type SupplementCategoryDetail = SupplementCategory & {
