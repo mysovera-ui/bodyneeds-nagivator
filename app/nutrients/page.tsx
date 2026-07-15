@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { listNutrients } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function NutrientsIndex() {
   const nutrients = await listNutrients();
 

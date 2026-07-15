@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { listFoodSources } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 const CATEGORIES = ["vegan", "vegetarian", "omnivore"];
 
 export default async function FoodsIndex({

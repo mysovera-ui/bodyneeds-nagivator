@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { listSymptoms } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function SymptomsIndex() {
   const symptoms = await listSymptoms();
 
