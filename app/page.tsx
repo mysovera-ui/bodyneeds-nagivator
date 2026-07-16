@@ -6,6 +6,8 @@ import NutrientResultCard from "@/components/NutrientResultCard";
 import FoodResultCard from "@/components/FoodResultCard";
 import { ResultCardSkeleton } from "@/components/Skeletons";
 import { searchAll } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
+import { saveSearch } from "@/lib/saved-searches-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -70,6 +72,11 @@ export default async function Home({
 }) {
   const { q } = await searchParams;
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <main className="max-w-2xl mx-auto px-4 py-10 space-y-8">
       <div className="text-center space-y-3">
@@ -84,6 +91,29 @@ export default async function Home({
       </div>
 
       <SearchBox defaultValue={q} />
+
+      {q && (
+        <div className="text-center">
+          {user ? (
+            <form action={saveSearch} className="inline-block">
+              <input type="hidden" name="query" value={q} />
+              <button
+                type="submit"
+                className="text-sm text-emerald-700 hover:underline touch-manipulation"
+              >
+                ★ Save this search
+              </button>
+            </form>
+          ) : (
+            <Link
+              href={`/login?next=${encodeURIComponent(`/?q=${encodeURIComponent(q)}`)}`}
+              className="text-xs text-neutral-400 underline touch-manipulation"
+            >
+              Sign in to save this search
+            </Link>
+          )}
+        </div>
+      )}
 
       {!q && (
         <div className="flex flex-wrap gap-2 justify-center text-sm">

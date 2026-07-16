@@ -1,11 +1,11 @@
-import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 import SidebarNav from "@/components/SidebarNav";
 
 export default async function Sidebar() {
-  const cookieStore = await cookies();
-  const expected = process.env.ADMIN_PASSWORD;
-  const session = cookieStore.get("admin_session")?.value;
-  const isAdmin = Boolean(expected && session === expected);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return <SidebarNav isAdmin={isAdmin} />;
+  return <SidebarNav userEmail={user?.email ?? null} />;
 }

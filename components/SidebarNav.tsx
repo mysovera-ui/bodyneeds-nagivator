@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { logout } from "@/lib/admin-actions";
+import { logout } from "@/lib/auth-actions";
 
 const links = [
   { href: "/", label: "Home" },
@@ -13,10 +13,11 @@ const links = [
   { href: "/supplements", label: "Supplements" },
 ];
 
-export default function SidebarNav({ isAdmin }: { isAdmin: boolean }) {
+export default function SidebarNav({ userEmail }: { userEmail: string | null }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const close = () => setOpen(false);
+  const isAuthed = Boolean(userEmail);
 
   return (
     <>
@@ -37,9 +38,9 @@ export default function SidebarNav({ isAdmin }: { isAdmin: boolean }) {
         <Link href="/" className="font-bold text-emerald-700 touch-manipulation" onClick={close}>
           BodyNeeds
         </Link>
-        {isAdmin ? (
+        {isAuthed ? (
           <span className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold flex items-center justify-center">
-            A
+            {userEmail!.charAt(0).toUpperCase()}
           </span>
         ) : (
           <span className="w-8" />
@@ -97,14 +98,28 @@ export default function SidebarNav({ isAdmin }: { isAdmin: boolean }) {
               </Link>
             );
           })}
+
+          {isAuthed && (
+            <Link
+              href="/saved"
+              onClick={close}
+              className={`block rounded-lg px-3 py-2.5 text-sm font-medium touch-manipulation ${
+                pathname === "/saved"
+                  ? "bg-emerald-50 text-emerald-800"
+                  : "text-neutral-700 hover:bg-neutral-100 active:bg-neutral-100"
+              }`}
+            >
+              Saved Searches
+            </Link>
+          )}
         </nav>
 
         <div className="p-3 border-t border-neutral-200">
-          {isAdmin ? (
+          {isAuthed ? (
             <div className="space-y-1">
-              <p className="px-3 text-xs text-neutral-500 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Signed in as Admin
+              <p className="px-3 text-xs text-neutral-500 flex items-center gap-1.5 truncate">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                <span className="truncate">Signed in as {userEmail}</span>
               </p>
               <Link
                 href="/admin"
@@ -127,13 +142,22 @@ export default function SidebarNav({ isAdmin }: { isAdmin: boolean }) {
               </form>
             </div>
           ) : (
-            <Link
-              href="/admin/login"
-              onClick={close}
-              className="block rounded-lg px-3 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 active:bg-emerald-50 touch-manipulation"
-            >
-              Admin sign in
-            </Link>
+            <div className="space-y-1">
+              <Link
+                href="/login"
+                onClick={close}
+                className="block rounded-lg px-3 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 active:bg-emerald-50 touch-manipulation"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                onClick={close}
+                className="block rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 active:bg-neutral-100 touch-manipulation"
+              >
+                Create consultant account
+              </Link>
+            </div>
           )}
         </div>
       </aside>

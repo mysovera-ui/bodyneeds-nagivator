@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ENTITIES } from "@/lib/admin";
-import { logout } from "@/lib/admin-actions";
+import { logout } from "@/lib/auth-actions";
 
 export default function AdminHome() {
   return (
@@ -20,6 +20,12 @@ export default function AdminHome() {
         Create, edit, and delete content. Changes appear on the public site
         immediately.
       </p>
+      <Link
+        href="/admin/audit-log"
+        className="inline-block text-sm text-emerald-700 hover:underline touch-manipulation"
+      >
+        View audit log →
+      </Link>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {Object.values(ENTITIES).map((e) => (
           <Link
