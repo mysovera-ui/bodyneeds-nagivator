@@ -22,13 +22,17 @@ export default async function EditEntityPage({
 
   async function update(formData: FormData) {
     "use server";
-    const values: Record<string, string> = {};
+    const values: Record<string, string | number | null> = {};
     for (const f of config.fields) {
       const v = formData.get(f.name)?.toString().trim() ?? "";
       if (f.required && !v) {
         redirect(`/admin/${entity}/${id}/edit?error=missing`);
       }
-      values[f.name] = v;
+      if (f.type === "number") {
+        values[f.name] = v ? Number(v) : null;
+      } else {
+        values[f.name] = v;
+      }
     }
     try {
       await updateRow(config.table, id, values);

@@ -18,6 +18,9 @@ export default function AdminFormFields({
               {f.label}
               {f.required && <span className="text-red-600"> *</span>}
             </label>
+            {f.hint && (
+              <p className="text-xs text-neutral-400 mb-1">{f.hint}</p>
+            )}
             {f.type === "textarea" ? (
               <textarea
                 name={f.name}
@@ -25,6 +28,17 @@ export default function AdminFormFields({
                 defaultValue={value}
                 rows={3}
                 className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            ) : f.type === "number" ? (
+              <input
+                type="number"
+                name={f.name}
+                required={f.required}
+                defaultValue={value}
+                min={0}
+                max={100}
+                step={1}
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             ) : f.type === "select" ? (
               <select

@@ -19,13 +19,17 @@ export default async function NewEntityPage({
 
   async function create(formData: FormData) {
     "use server";
-    const values: Record<string, string> = {};
+    const values: Record<string, string | number | null> = {};
     for (const f of config.fields) {
       const v = formData.get(f.name)?.toString().trim() ?? "";
       if (f.required && !v) {
         redirect(`/admin/${entity}/new?error=missing`);
       }
-      if (v) values[f.name] = v;
+      if (f.type === "number") {
+        if (v) values[f.name] = Number(v);
+      } else if (v) {
+        values[f.name] = v;
+      }
     }
     try {
       await insertRow(config.table, values);

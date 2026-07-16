@@ -1,9 +1,10 @@
 export type FieldConfig = {
   name: string;
   label: string;
-  type: "text" | "textarea" | "select";
+  type: "text" | "textarea" | "select" | "number";
   required?: boolean;
   options?: string[];
+  hint?: string;
 };
 
 export type EntityConfig = {
@@ -12,6 +13,9 @@ export type EntityConfig = {
   singular: string;
   table: string;
   fields: FieldConfig[];
+  reviewStatusField: string;
+  confidenceField: string;
+  sourceField: string;
 };
 
 const REVIEW_OPTIONS = ["unreviewed", "reviewed", "approved"];
@@ -31,8 +35,13 @@ export const ENTITIES: Record<string, EntityConfig> = {
       { name: "medical_causes", label: "Medical causes", type: "textarea", required: true },
       { name: "red_flags", label: "Red flags", type: "textarea", required: true },
       { name: "professional_next_steps", label: "Professional next steps", type: "textarea", required: true },
+      { name: "explanation_source", label: "Source", type: "text", hint: "e.g. NIH fact sheet, peer-reviewed study" },
+      { name: "explanation_confidence", label: "Confidence score (0\u2013100)", type: "number" },
       { name: "explanation_review_status", label: "Review status", type: "select", options: REVIEW_OPTIONS },
     ],
+    reviewStatusField: "explanation_review_status",
+    confidenceField: "explanation_confidence",
+    sourceField: "explanation_source",
   },
   nutrients: {
     key: "nutrients",
@@ -48,8 +57,13 @@ export const ENTITIES: Record<string, EntityConfig> = {
       { name: "excess_risks", label: "Excess risks", type: "textarea", required: true },
       { name: "at_risk_groups", label: "At-risk groups", type: "textarea", required: true },
       { name: "supplement_forms", label: "Supplement forms", type: "textarea", required: true },
+      { name: "content_source", label: "Source", type: "text", hint: "e.g. NIH fact sheet, peer-reviewed study" },
+      { name: "content_confidence", label: "Confidence score (0\u2013100)", type: "number" },
       { name: "content_review_status", label: "Review status", type: "select", options: REVIEW_OPTIONS },
     ],
+    reviewStatusField: "content_review_status",
+    confidenceField: "content_confidence",
+    sourceField: "content_source",
   },
   foods: {
     key: "foods",
@@ -70,8 +84,13 @@ export const ENTITIES: Record<string, EntityConfig> = {
       { name: "allergens", label: "Allergens", type: "text" },
       { name: "availability", label: "Availability", type: "text" },
       { name: "dietary_patterns", label: "Dietary patterns", type: "text" },
+      { name: "content_source", label: "Source", type: "text", hint: "e.g. USDA FoodData Central" },
+      { name: "content_confidence", label: "Confidence score (0\u2013100)", type: "number" },
       { name: "content_review_status", label: "Review status", type: "select", options: REVIEW_OPTIONS },
     ],
+    reviewStatusField: "content_review_status",
+    confidenceField: "content_confidence",
+    sourceField: "content_source",
   },
   supplements: {
     key: "supplements",
@@ -89,7 +108,12 @@ export const ENTITIES: Record<string, EntityConfig> = {
       { name: "cautions", label: "Cautions", type: "textarea", required: true },
       { name: "interactions", label: "Interactions", type: "textarea", required: true },
       { name: "at_risk_groups", label: "At-risk groups", type: "textarea", required: true },
+      { name: "content_source", label: "Source", type: "text", hint: "e.g. NIH ODS fact sheet" },
+      { name: "content_confidence", label: "Confidence score (0\u2013100)", type: "number" },
       { name: "content_review_status", label: "Review status", type: "select", options: REVIEW_OPTIONS },
     ],
+    reviewStatusField: "content_review_status",
+    confidenceField: "content_confidence",
+    sourceField: "content_source",
   },
 };

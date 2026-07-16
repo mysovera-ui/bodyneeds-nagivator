@@ -40,7 +40,7 @@ export async function getRow(
   return data;
 }
 
-export async function insertRow(table: string, values: Record<string, string>) {
+export async function insertRow(table: string, values: Record<string, string | number | null>) {
   const supabase = await createClient();
   const { data, error } = await supabase.from(table).insert(values).select().single();
   if (error) throw new Error(error.message);
@@ -48,7 +48,7 @@ export async function insertRow(table: string, values: Record<string, string>) {
   return data;
 }
 
-export async function updateRow(table: string, id: string, values: Record<string, string>) {
+export async function updateRow(table: string, id: string, values: Record<string, string | number | null>) {
   const supabase = await createClient();
   const { error } = await supabase.from(table).update(values).eq("id", id);
   if (error) throw new Error(error.message);
