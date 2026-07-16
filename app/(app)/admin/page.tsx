@@ -20,12 +20,20 @@ export default function AdminHome() {
         Create, edit, and delete content. Changes appear on the public site
         immediately.
       </p>
-      <Link
-        href="/admin/audit-log"
-        className="inline-block text-sm text-emerald-700 hover:underline touch-manipulation"
-      >
-        View audit log →
-      </Link>
+      <div className="flex flex-wrap gap-x-4 gap-y-1">
+        <Link
+          href="/admin/audit-log"
+          className="inline-block text-sm text-emerald-700 hover:underline touch-manipulation"
+        >
+          View audit log →
+        </Link>
+        <Link
+          href="/admin/branding"
+          className="inline-block text-sm text-emerald-700 hover:underline touch-manipulation"
+        >
+          Branding & share links →
+        </Link>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {Object.values(ENTITIES).map((e) => (
           <Link

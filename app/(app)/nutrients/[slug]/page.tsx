@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getNutrientBySlug } from "@/lib/data";
 import Disclaimer from "@/components/Disclaimer";
+import ShareLinkBar from "@/components/ShareLinkBar";
 
 export default async function NutrientDetail({
   params,
@@ -14,9 +15,12 @@ export default async function NutrientDetail({
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-10 space-y-4">
-      <Link href="/nutrients" className="text-sm text-emerald-700 hover:underline touch-manipulation inline-block py-1">
-        ← All nutrients
-      </Link>
+      <div className="flex items-center justify-between gap-3">
+        <Link href="/nutrients" className="text-sm text-emerald-700 hover:underline touch-manipulation inline-block py-1">
+          ← All nutrients
+        </Link>
+        <ShareLinkBar type="nutrients" itemSlug={slug} />
+      </div>
       <article className="rounded-xl border border-neutral-200 bg-white p-6 space-y-5 shadow-sm">
         <h1 className="text-2xl font-bold text-neutral-900">{nutrient.name}</h1>
 

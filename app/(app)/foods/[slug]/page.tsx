@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getFoodSourceBySlug } from "@/lib/data";
 import Disclaimer from "@/components/Disclaimer";
+import ShareLinkBar from "@/components/ShareLinkBar";
 
 export default async function FoodDetail({
   params,
@@ -14,9 +15,12 @@ export default async function FoodDetail({
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-10 space-y-4">
-      <Link href="/foods" className="text-sm text-emerald-700 hover:underline touch-manipulation inline-block py-1">
-        ← All foods
-      </Link>
+      <div className="flex items-center justify-between gap-3">
+        <Link href="/foods" className="text-sm text-emerald-700 hover:underline touch-manipulation inline-block py-1">
+          ← All foods
+        </Link>
+        <ShareLinkBar type="foods" itemSlug={slug} />
+      </div>
       <article className="rounded-xl border border-neutral-200 bg-white p-6 space-y-5 shadow-sm">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-neutral-900">{food.name}</h1>

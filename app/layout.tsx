@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "BodyNeeds Navigator",
@@ -27,10 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased bg-neutral-50 min-h-screen">
-        <Sidebar />
-        <div className="sm:pl-64 pt-14 sm:pt-0 min-h-screen">{children}</div>
-      </body>
+      <body className="antialiased bg-neutral-50 min-h-screen">{children}</body>
     </html>
   );
 }
