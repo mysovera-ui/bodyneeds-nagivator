@@ -18,3 +18,4 @@
 
 - Saved searches functionality added to the project
 - Sprint 6 security lock-down completed
+- AGENTS.md synced to reflect current Launchpad memory state
