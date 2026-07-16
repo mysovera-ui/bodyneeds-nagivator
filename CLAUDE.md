@@ -13,6 +13,7 @@
 ## Architecture
 
 - Consultant accounts implemented as a feature
+- Consultant branding and white-label result pages implemented - allows consultants to customize shareable result pages with their branding
 
 ## Notes
 
