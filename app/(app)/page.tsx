@@ -8,6 +8,7 @@ import { ResultCardSkeleton } from "@/components/Skeletons";
 import { searchAll } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 import { saveSearch } from "@/lib/saved-searches-actions";
+import { logSearch } from "@/lib/analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,13 @@ async function SearchResults({ q }: { q: string }) {
   try {
     const { symptoms, nutrients, foods } = await searchAll(q);
     const hasResults = symptoms.length > 0 || nutrients.length > 0 || foods.length > 0;
+
+    await logSearch(
+      q,
+      symptoms.map((s) => s.id),
+      nutrients.length,
+      foods.length,
+    );
 
     if (!hasResults) {
       return (

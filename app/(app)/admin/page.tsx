@@ -39,6 +39,12 @@ export default function AdminHome() {
         >
           Content review →
         </Link>
+        <Link
+          href="/admin/analytics"
+          className="inline-block text-sm text-emerald-700 hover:underline touch-manipulation"
+        >
+          Analytics →
+        </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {Object.values(ENTITIES).map((e) => (
