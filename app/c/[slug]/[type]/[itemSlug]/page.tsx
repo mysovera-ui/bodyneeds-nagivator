@@ -48,7 +48,13 @@ export default async function BrandedResultPage({
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8 space-y-6">
-        <div className="print:hidden flex justify-end">
+        <div className="print:hidden flex justify-end gap-2">
+          <a
+            href={`/pdf/${type}/${itemSlug}?brand=${slug}`}
+            className="text-sm text-neutral-600 border border-neutral-300 rounded-lg px-3 py-1.5 hover:bg-neutral-100 touch-manipulation"
+          >
+            Download PDF
+          </a>
           <PrintButton />
         </div>
 
