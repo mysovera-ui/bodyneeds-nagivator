@@ -14,9 +14,11 @@
 
 - Consultant accounts implemented as a feature
 - Consultant branding and white-label result pages implemented - allows consultants to customize shareable result pages with their branding
+- Content review workflow implemented with confidence and source fields, plus a review queue system for managing content validation
 
 ## Notes
 
 - Saved searches functionality added to the project
 - Sprint 6 security lock-down completed
 - AGENTS.md synced to reflect current Launchpad memory state
+- Printable/downloadable PDF result sheets added for client handouts
